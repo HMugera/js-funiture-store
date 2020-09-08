@@ -1,3 +1,17 @@
+window.addEventListener('scroll', function() {
+    let header = document.querySelector('.navbar');
+    header.classList.toggle('sticky', window.scrollY > 0)
+});
+
+
+// const contentful = require("contentful");
+const client = contentful.createClient({
+    // This is the space ID. A space is like a project folder in Contentful terms
+    space: "wg1ulkn58gj9",
+    // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+    accessToken: "Gxbm0bv93NTqJ9nLwtY_rHu24-Xy-X4ZmPAfM_nUmdo"
+});
+console.log(client);
 //variables
 const cartBtn = document.querySelector(".cart-btn");
 const closeCartBtn = document.querySelector(".close-cart");
@@ -17,9 +31,15 @@ let buttonsDOM = [];
 class Products {
     async getProducts() {
         try {
-            let result = await fetch("products.json");
-            let data = await result.json();
-            let products = data.items;
+
+            let contentful = await client.getEntries({
+                content_type: "funitureStore"
+            })
+
+            // let result = await fetch("products.json");
+            // let data = await result.json();
+
+            let products = contentful.items;
             products = products.map((item) => {
                 const { title, price } = item.fields;
                 const { id } = item.sys;
